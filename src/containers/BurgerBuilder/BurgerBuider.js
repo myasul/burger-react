@@ -42,7 +42,7 @@ class BurgerBuilder extends Component {
         this.setState((prevState, props) => {
             if (prevState.ingredients[type] > 0) {
                 newIgredients[type] = prevState.ingredients[type] - 1;
-                newPrice -= prevState.totalPrice;
+                newPrice = prevState.totalPrice - newPrice;
 
                 return {
                     ingredients: newIgredients,
@@ -65,6 +65,7 @@ class BurgerBuilder extends Component {
             <React.Fragment>
                 <Burger ingredients={this.state.ingredients} />
                 <BuildControls
+                    totalPrice={this.state.totalPrice}
                     more={this.addIngredientHandler}
                     less={this.removeIngredientHandler}
                     disabledInfo={disabledInfo} />
