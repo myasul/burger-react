@@ -3,7 +3,7 @@ import classes from './Backdrop.css';
 
 const backdrop = (props) => (
     <div
-        onClick={props.closeModal}
+        onClick={props.close}
         className={classes.Backdrop} />
 )
 
