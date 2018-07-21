@@ -1,6 +1,5 @@
 import React, { Component, Fragment } from 'react';
 import Modal from '../../components/UI/Modal/Modal';
-//import axios from 'axios';
 
 const withErrorHandler = (WrapperComponent, axios) => {
     return class extends Component {
@@ -8,7 +7,7 @@ const withErrorHandler = (WrapperComponent, axios) => {
             error: null
         }
 
-        componentDidMount() {
+        componentWillMount() {
             axios.interceptors.request.use(request => {
                 this.setState({
                     error: null

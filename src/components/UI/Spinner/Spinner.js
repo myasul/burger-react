@@ -2,7 +2,9 @@ import React from 'react';
 import classes from './Spinner.css';
 
 const spinner = (props) => (
-    <div className={classes.Loader}>Loading...</div>
+    <div style={props.style}>
+        <div className={classes.Loader} ></div>
+    </div>
 );
 
 export default spinner;
