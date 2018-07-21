@@ -3,6 +3,7 @@ import Burger from '../../components/Burger/Burger';
 import BuildControls from '../../components/Burger/BuildControls/BuildControls';
 import Modal from '../../components/UI/Modal/Modal';
 import OrderSummary from '../../components/Burger/OrderSummary/OrderSummary';
+import Spinner from '../../components/UI/Spinner/Spinner';
 import axios from '../../axios-orders';
 
 const INGREDIENT_PRICES = {
@@ -22,7 +23,8 @@ class BurgerBuilder extends Component {
         },
         totalPrice: 4,
         isPurchasable: false,
-        isOrdered: false
+        isOrdered: false,
+        isLoading: false
     }
 
     checkIfPurchasable = (newIgredients) => {
@@ -78,6 +80,9 @@ class BurgerBuilder extends Component {
     }
 
     purchaseContinuedHandler = () => {
+        this.setState({
+            isLoading: true
+        })
         const order = {
             ingredients: this.state.ingredients,
             totalPrice: this.state.totalPrice,
@@ -106,14 +111,20 @@ class BurgerBuilder extends Component {
             }
         );
 
+        let orderSummary = <OrderSummary
+            ingredients={this.state.ingredients}
+            closeModal={this.updateOrderHandler}
+            continued={this.purchaseContinuedHandler}
+            totalPrice={this.state.totalPrice} />;
+
+        if (this.state.isLoading) {
+            orderSummary = <Spinner />
+        }
+
         return (
             <React.Fragment>
                 <Modal displayModal={this.state.isOrdered} closeModal={this.updateOrderHandler}>
-                    <OrderSummary
-                        ingredients={this.state.ingredients}
-                        closeModal={this.updateOrderHandler}
-                        continued={this.purchaseContinuedHandler}
-                        totalPrice={this.state.totalPrice} />
+                    {orderSummary}
                 </Modal>
                 <Burger ingredients={this.state.ingredients} />
                 <BuildControls
