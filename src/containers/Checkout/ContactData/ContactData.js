@@ -9,10 +9,14 @@ import Input from '../../../components/UI/Input/Input';
 
 class ContactData extends Component {
     state = {
-        name: '',
-        email: '',
-        street: '',
-        postalCode: '',
+        orderForm: {
+            name: createInputElementConfig('text', 'Your Name'),
+            email: createInputElementConfig('text', 'Your E-Mail'),
+            street: createInputElementConfig('text', 'Street'),
+            postalCode: createInputElementConfig('text', 'ZIP Code'),
+            country: createInputElementConfig('text', 'Country')
+            //deliveryMethod: 'fastest'
+        },
         isLoading: false
     }
 
@@ -24,16 +28,6 @@ class ContactData extends Component {
         const order = {
             ingredients: this.props.ingredients,
             totalPrice: this.props.price,
-            customer: {
-                name: 'Matthew Yasul',
-                address: {
-                    street: 'Teststreet st',
-                    postalCode: '12345',
-                    country: 'Philippines'
-                },
-                email: 'test@test.com'
-            },
-            deliveryMethod: 'fastest'
         };
 
         axios.post('/orders.json', order)
@@ -51,13 +45,22 @@ class ContactData extends Component {
 
     }
     render() {
+        // console.log(this.state.orderForm)
+        let inputElements = [];
+        Object.entries(this.state.orderForm).forEach(([key, value]) => {
+            inputElements.push(
+                <Input
+                    key={key}
+                    elementType={value.elementConfig}
+                    elementConfig={value.elementConfig}
+                    elementValue={value.elementValue} />
+            )
+        })
+
         let form = (
             <form action="post">
                 <h2>Enter your Contact Data</h2>
-                <Input inputtype='input' type='text' placeholder='Your Name' />
-                <Input inputtype='input' type='text' placeholder='Your Email' />
-                <Input inputtype='input' type='text' placeholder='Street' />
-                <Input inputtype='input' type='text' placeholder='Postal Code' />
+                {inputElements}
                 <Button
                     btnType='Success'
                     action={this.orderHandler}>ORDER</Button>
@@ -72,6 +75,17 @@ class ContactData extends Component {
                 {form}
             </div>
         );
+    }
+}
+
+function createInputElementConfig(type, placeholder) {
+    return {
+        elementType: 'input',
+        elementConfig: {
+            type: type,
+            placeholder: placeholder
+        },
+        elementValue: ''
     }
 }
 
