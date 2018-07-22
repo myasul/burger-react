@@ -29,7 +29,6 @@ const withErrorHandler = (WrapperComponent, axios) => {
         }
 
         modalVisibilityHandler = () => {
-            console.log("Modal is clicked!");
             this.setState({
                 error: null
             })
