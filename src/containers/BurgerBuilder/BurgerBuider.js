@@ -25,11 +25,12 @@ class BurgerBuilder extends Component {
     }
 
     componentDidMount() {
-        console.log('Burger builder mounted!');
         axios.get('https://react-burger-project-b2062.firebaseio.com/ingredients.json')
             .then(response => {
+
                 this.setState({
-                    ingredients: response.data
+                    ingredients: response.data,
+                    isPurchasable: this.checkIfPurchasable(response.data)
                 })
             })
             .catch(error => {
@@ -92,37 +93,39 @@ class BurgerBuilder extends Component {
     }
 
     purchaseContinuedHandler = () => {
-        this.setState({
-            isLoading: true
-        })
-        const order = {
-            ingredients: this.state.ingredients,
-            totalPrice: this.state.totalPrice,
-            customer: {
-                name: 'Matthew Yasul',
-                address: {
-                    street: 'Teststreet st',
-                    postalCode: '12345',
-                    country: 'Philippines'
-                },
-                email: 'test@test.com'
-            },
-            deliveryMethod: 'fastest'
-        };
+        // this.setState({
+        //     isLoading: true
+        // })
+        // const order = {
+        //     ingredients: this.state.ingredients,
+        //     totalPrice: this.state.totalPrice,
+        //     customer: {
+        //         name: 'Matthew Yasul',
+        //         address: {
+        //             street: 'Teststreet st',
+        //             postalCode: '12345',
+        //             country: 'Philippines'
+        //         },
+        //         email: 'test@test.com'
+        //     },
+        //     deliveryMethod: 'fastest'
+        // };
 
-        axios.post('/orders.json', order)
-            .then(response => {
-                this.setState({
-                    isLoading: false,
-                    isOrdered: false
-                });
-            })
-            .catch(error => {
-                this.setState({
-                    isLoading: false,
-                    isOrdered: false
-                });
-            });
+        // axios.post('/orders.json', order)
+        //     .then(response => {
+        //         this.setState({
+        //             isLoading: false,
+        //             isOrdered: false
+        //         });
+
+        //     })
+        //     .catch(error => {
+        //         this.setState({
+        //             isLoading: false,
+        //             isOrdered: false
+        //         });
+        //     });
+        this.props.history.push({ pathname: '/checkout' });
     }
     render() {
         const burgerStyle = {
