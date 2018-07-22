@@ -11,8 +11,10 @@ class App extends Component {
         return (
             <div className={classes.App}>
                 <Layout>
-                    <Route path='/burgerbuilder' component={BurgerBuilder} />
-                    <Route path='/checkout' component={Checkout} />
+                    <Switch>
+                        <Route path='/checkout' component={Checkout} />
+                        <Route path='/' component={BurgerBuilder} />
+                    </Switch>
                 </Layout>
             </div>
         );

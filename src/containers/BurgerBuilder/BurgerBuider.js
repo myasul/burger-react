@@ -93,43 +93,11 @@ class BurgerBuilder extends Component {
     }
 
     purchaseContinuedHandler = () => {
-        // this.setState({
-        //     isLoading: true
-        // })
-        // const order = {
-        //     ingredients: this.state.ingredients,
-        //     totalPrice: this.state.totalPrice,
-        //     customer: {
-        //         name: 'Matthew Yasul',
-        //         address: {
-        //             street: 'Teststreet st',
-        //             postalCode: '12345',
-        //             country: 'Philippines'
-        //         },
-        //         email: 'test@test.com'
-        //     },
-        //     deliveryMethod: 'fastest'
-        // };
-
-        // axios.post('/orders.json', order)
-        //     .then(response => {
-        //         this.setState({
-        //             isLoading: false,
-        //             isOrdered: false
-        //         });
-
-        //     })
-        //     .catch(error => {
-        //         this.setState({
-        //             isLoading: false,
-        //             isOrdered: false
-        //         });
-        //     });
-
         const ingredientSearchParam = [];
         Object.entries(this.state.ingredients).forEach(([key, value]) => {
             ingredientSearchParam.push(`${key}=${value}`);
         })
+        ingredientSearchParam.push(`price=${this.state.totalPrice}`);
 
         this.props.history.push({
             pathname: '/checkout',
@@ -144,7 +112,7 @@ class BurgerBuilder extends Component {
             height: '100vh'
         };
         let orderSummary = null;
-        let burger = <Spinner style={burgerStyle} />;
+        let burger = <Spinner />;
         const disabledInfo = { ...this.state.ingredients };
 
         Object.entries(disabledInfo).forEach(
