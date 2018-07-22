@@ -1,11 +1,13 @@
 import React, { Component } from 'react';
 import Order from '../../components/Order/Order';
 import axios from '../../axios-orders';
+import withErrorHandler from '../../hoc/withErrorHandler/withErrorHandler';
 
 class Orders extends Component {
     state = {
         orders: [],
-        isLoading: true
+        isLoading: true,
+        hasErrors: false
     }
 
     componentDidMount() {
@@ -23,23 +25,42 @@ class Orders extends Component {
                     orders: orders,
                     isLoading: false
                 });
+                console.log(this.state.orders);
             })
             .catch(error => {
                 this.setState({
-                    isLoading: false
+                    isLoading: false,
+                    hasErrors: true
                 })
             });
 
     }
 
     render() {
+        const errorStyle = {
+            display: 'flex',
+            justifyContent: 'center',
+            alignItems: 'center',
+            height: '100vh'
+        };
+
+        let orders = this.state.orders.map(order => {
+            return <Order
+                key={order.key}
+                ingredients={order.ingredients}
+                price={order.totalPrice} />
+        });
+
+        if (this.state.hasErrors) {
+            orders = <p style={errorStyle}>Orders cannot be loaded.</p>
+        }
+
         return (
             <div>
-                <Order />
-                <Order />
+                {orders}
             </div>
         )
     }
 }
 
-export default Orders;
+export default withErrorHandler(Orders, axios);
