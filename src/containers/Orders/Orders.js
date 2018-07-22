@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import Order from '../../components/Order/Order';
 import axios from '../../axios-orders';
 import withErrorHandler from '../../hoc/withErrorHandler/withErrorHandler';
+import Spinner from '../../components/UI/Spinner/Spinner';
 
 class Orders extends Component {
     state = {
@@ -50,6 +51,10 @@ class Orders extends Component {
                 ingredients={order.ingredients}
                 price={order.totalPrice} />
         });
+
+        if (this.state.isLoading) {
+            orders = <Spinner />
+        }
 
         if (this.state.hasErrors) {
             orders = <p style={errorStyle}>Orders cannot be loaded.</p>
