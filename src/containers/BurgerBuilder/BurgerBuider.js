@@ -125,7 +125,16 @@ class BurgerBuilder extends Component {
         //             isOrdered: false
         //         });
         //     });
-        this.props.history.push({ pathname: '/checkout' });
+
+        const ingredientSearchParam = [];
+        Object.entries(this.state.ingredients).forEach(([key, value]) => {
+            ingredientSearchParam.push(`${key}=${value}`);
+        })
+
+        this.props.history.push({
+            pathname: '/checkout',
+            search: `?${ingredientSearchParam.join('&')}`
+        });
     }
     render() {
         const burgerStyle = {
