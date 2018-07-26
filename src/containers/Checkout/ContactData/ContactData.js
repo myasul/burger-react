@@ -44,10 +44,17 @@ class ContactData extends Component {
         event.preventDefault();
         this.setState({
             isLoading: true
+        });
+
+        const orderData = {};
+        Object.entries(this.state.orderForm).forEach(([inputName, inputValues]) => {
+            orderData[inputName] = inputValues.elementValue;
         })
+
         const order = {
             ingredients: this.props.ingredients,
             totalPrice: this.props.price,
+            orderData: orderData
         };
 
         axios.post('/orders.json', order)
@@ -91,12 +98,10 @@ class ContactData extends Component {
             })
 
             form = (
-                <form action="post">
+                <form action="post" onSubmit={this.orderHandler}>
                     <h2>Enter your Contact Data</h2>
                     {inputElements}
-                    <Button
-                        btnType='Success'
-                        action={this.orderHandler}>ORDER</Button>
+                    <Button btnType='Success'>ORDER</Button>
                 </form>
             );
         }
@@ -131,7 +136,7 @@ function createSelectElementConfig(options) {
         elementConfig: {
             options: selectOptions
         },
-        elementValue: ''
+        elementValue: selectOptions[0].value
     }
 }
 
