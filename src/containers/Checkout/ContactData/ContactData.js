@@ -111,8 +111,10 @@ class ContactData extends Component {
         const updatedOrderForm = JSON.parse(JSON.stringify(this.state.orderForm));
 
         updatedOrderForm[inputIdentifier].elementValue = event.target.value;
-        updatedOrderForm[inputIdentifier].isValid = this.validationHandler(
-            event.target.value, updatedOrderForm[inputIdentifier].validation);
+        if (updatedOrderForm[inputIdentifier].shouldValidate) {
+            updatedOrderForm[inputIdentifier].isValid = this.validationHandler(
+                event.target.value, updatedOrderForm[inputIdentifier].validation);
+        }
 
         this.setState({
             orderForm: updatedOrderForm
@@ -132,7 +134,9 @@ class ContactData extends Component {
                         elementType={value.elementType}
                         elementConfig={value.elementConfig}
                         elementValue={value.elementValue}
-                        changed={(event) => this.inputChangeHandler(event, key)} />
+                        changed={(event) => this.inputChangeHandler(event, key)}
+                        invalid={!value.isValid}
+                        shouldValidate={value.shouldValidate} />
                 )
             })
 
@@ -161,7 +165,8 @@ function createInputElementConfig(type, placeholder, validationRules) {
         },
         elementValue: '',
         validation: validationRules,
-        isValid: true
+        isValid: true,
+        shouldValidate: validationRules ? true : false
     }
 }
 
