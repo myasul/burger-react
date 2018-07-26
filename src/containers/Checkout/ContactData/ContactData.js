@@ -22,11 +22,28 @@ class ContactData extends Component {
 
     componentDidMount() {
         const loadedOrderForm = {
-            name: createInputElementConfig('text', 'Your Name'),
-            email: createInputElementConfig('email', 'Your E-Mail'),
-            street: createInputElementConfig('text', 'Street'),
-            postalCode: createInputElementConfig('text', 'ZIP Code'),
-            country: createInputElementConfig('text', 'Country'),
+            name: createInputElementConfig('text', 'Your Name',
+                {
+                    required: true
+                }),
+            email: createInputElementConfig('email', 'Your E-Mail',
+                {
+                    required: true
+                }),
+            street: createInputElementConfig('text', 'Street',
+                {
+                    required: true
+                }),
+            postalCode: createInputElementConfig('text', 'ZIP Code',
+                {
+                    required: true,
+                    minLength: 5,
+                    maxLength: 5
+                }),
+            country: createInputElementConfig('text', 'Country',
+                {
+                    required: true
+                }),
             deliveryMethod: createSelectElementConfig(
                 {
                     'fastest': 'Fastest',
@@ -38,6 +55,24 @@ class ContactData extends Component {
             orderForm: loadedOrderForm,
             isLoading: false
         });
+    }
+
+    validationHandler = (value, rules) => {
+        let isValid = true;
+
+        if (rules.required) {
+            isValid = value.trim() !== '' && isValid;
+        }
+
+        if (rules.minLength) {
+            isValid = rules.minLength <= value.length && isValid;
+        }
+
+        if (rules.maxLength) {
+            isValid = rules.maxLength >= value.length && isValid;
+        }
+
+        return isValid;
     }
 
     orderHandler = (event) => {
@@ -74,7 +109,11 @@ class ContactData extends Component {
 
     inputChangeHandler = (event, inputIdentifier) => {
         const updatedOrderForm = JSON.parse(JSON.stringify(this.state.orderForm));
+
         updatedOrderForm[inputIdentifier].elementValue = event.target.value;
+        updatedOrderForm[inputIdentifier].isValid = this.validationHandler(
+            event.target.value, updatedOrderForm[inputIdentifier].validation);
+
         this.setState({
             orderForm: updatedOrderForm
         });
@@ -113,14 +152,16 @@ class ContactData extends Component {
     }
 }
 
-function createInputElementConfig(type, placeholder) {
+function createInputElementConfig(type, placeholder, validationRules) {
     return {
         elementType: 'input',
         elementConfig: {
             type: type,
             placeholder: placeholder
         },
-        elementValue: ''
+        elementValue: '',
+        validation: validationRules,
+        isValid: true
     }
 }
 
