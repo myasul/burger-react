@@ -10,14 +10,34 @@ import Input from '../../../components/UI/Input/Input';
 class ContactData extends Component {
     state = {
         orderForm: {
+            name: null,
+            email: null,
+            street: null,
+            postalCode: null,
+            country: null,
+            deliveryMethod: null
+        },
+        isLoading: true
+    }
+
+    componentDidMount() {
+        const loadedOrderForm = {
             name: createInputElementConfig('text', 'Your Name'),
-            email: createInputElementConfig('text', 'Your E-Mail'),
+            email: createInputElementConfig('email', 'Your E-Mail'),
             street: createInputElementConfig('text', 'Street'),
             postalCode: createInputElementConfig('text', 'ZIP Code'),
-            country: createInputElementConfig('text', 'Country')
-            //deliveryMethod: 'fastest'
-        },
-        isLoading: false
+            country: createInputElementConfig('text', 'Country'),
+            deliveryMethod: createSelectElementConfig(
+                {
+                    'fastest': 'Fastest',
+                    'cheapest': 'Cheapest'
+                }
+            )
+        }
+        this.setState({
+            orderForm: loadedOrderForm,
+            isLoading: false
+        });
     }
 
     orderHandler = (event) => {
@@ -44,31 +64,41 @@ class ContactData extends Component {
             });
 
     }
-    render() {
-        // console.log(this.state.orderForm)
-        let inputElements = [];
-        Object.entries(this.state.orderForm).forEach(([key, value]) => {
-            inputElements.push(
-                <Input
-                    key={key}
-                    elementType={value.elementConfig}
-                    elementConfig={value.elementConfig}
-                    elementValue={value.elementValue} />
-            )
-        })
 
-        let form = (
-            <form action="post">
-                <h2>Enter your Contact Data</h2>
-                {inputElements}
-                <Button
-                    btnType='Success'
-                    action={this.orderHandler}>ORDER</Button>
-            </form>
-        );
+    inputChangeHandler = (event, inputIdentifier) => {
+        const updatedOrderForm = JSON.parse(JSON.stringify(this.state.orderForm));
+        updatedOrderForm[inputIdentifier].elementValue = event.target.value;
+        this.setState({
+            orderForm: updatedOrderForm
+        });
+    }
+    render() {
+        let form = null;
 
         if (this.state.isLoading) {
             form = <Spinner />
+        } else {
+            let inputElements = [];
+            Object.entries(this.state.orderForm).forEach(([key, value]) => {
+                inputElements.push(
+                    <Input
+                        key={key}
+                        elementType={value.elementType}
+                        elementConfig={value.elementConfig}
+                        elementValue={value.elementValue}
+                        changed={(event) => this.inputChangeHandler(event, key)} />
+                )
+            })
+
+            form = (
+                <form action="post">
+                    <h2>Enter your Contact Data</h2>
+                    {inputElements}
+                    <Button
+                        btnType='Success'
+                        action={this.orderHandler}>ORDER</Button>
+                </form>
+            );
         }
         return (
             <div className={classes.ContactData}>
@@ -84,6 +114,22 @@ function createInputElementConfig(type, placeholder) {
         elementConfig: {
             type: type,
             placeholder: placeholder
+        },
+        elementValue: ''
+    }
+}
+
+function createSelectElementConfig(options) {
+    const selectOptions = [];
+    Object.entries(options).forEach(([value, displayValue]) => {
+        selectOptions.push(
+            { value: value, displayValue: displayValue }
+        )
+    });
+    return {
+        elementType: 'select',
+        elementConfig: {
+            options: selectOptions
         },
         elementValue: ''
     }
