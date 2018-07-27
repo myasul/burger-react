@@ -17,7 +17,8 @@ class ContactData extends Component {
             country: null,
             deliveryMethod: null
         },
-        isLoading: true
+        isLoading: true,
+        isFormValid: true
     }
 
     componentDidMount() {
@@ -116,8 +117,18 @@ class ContactData extends Component {
                 event.target.value, updatedOrderForm[inputIdentifier].validation);
         }
 
+        let isFormValid = true;
+        Object.entries(updatedOrderForm).forEach(([key, inputForms]) => {
+            Object.entries(inputForms).forEach(([name, value]) => {
+                if (name === 'isValid') {
+                    isFormValid = value && isFormValid;
+                }
+            })
+        });
+
         this.setState({
-            orderForm: updatedOrderForm
+            orderForm: updatedOrderForm,
+            isFormValid: isFormValid
         });
     }
     render() {
@@ -144,7 +155,7 @@ class ContactData extends Component {
                 <form action="post" onSubmit={this.orderHandler}>
                     <h2>Enter your Contact Data</h2>
                     {inputElements}
-                    <Button btnType='Success'>ORDER</Button>
+                    <Button btnType='Success' disabled={!this.state.isFormValid}>ORDER</Button>
                 </form>
             );
         }
@@ -182,7 +193,8 @@ function createSelectElementConfig(options) {
         elementConfig: {
             options: selectOptions
         },
-        elementValue: selectOptions[0].value
+        elementValue: selectOptions[0].value,
+        isValid: true
     }
 }
 
