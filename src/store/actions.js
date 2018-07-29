@@ -1,10 +1,2 @@
-const initialState = {
-    ingredients = null,
-    totalPrice = 0
-}
-
-const reducer = (state = initialState, action) => {
-    return state;
-}
-
-export default reducer;
+export const ADD_INGREDIENT = 'ADD_INGREDIENT';
+export const REMOVE_INGREDIENT = 'REMOVE_INGREDIENT';
