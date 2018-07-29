@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
-import { withRouter } from 'react-router-dom'
+import { withRouter } from 'react-router-dom';
+import { connect } from 'react-redux';
 
 import axios from '../../../axios-orders';
 import classes from './ContactData.css';
@@ -195,4 +196,12 @@ function createSelectElementConfig(options) {
     }
 }
 
-export default withRouter(ContactData);
+
+const mapStateToProps = (state) => {
+    return {
+        ingredients: state.ingredients,
+        totalPrice: state.ingredients
+    }
+}
+
+export default connect(mapStateToProps)(withRouter(ContactData));

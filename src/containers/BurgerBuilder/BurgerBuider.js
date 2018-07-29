@@ -50,15 +50,8 @@ class BurgerBuilder extends Component {
     }
 
     purchaseContinuedHandler = () => {
-        const ingredientSearchParam = [];
-        Object.entries(this.props.ingredients).forEach(([key, value]) => {
-            ingredientSearchParam.push(`${key}=${value}`);
-        })
-        ingredientSearchParam.push(`price=${this.props.totalPrice}`);
-
         this.props.history.push({
-            pathname: '/checkout',
-            search: `?${ingredientSearchParam.join('&')}`
+            pathname: '/checkout'
         });
     }
     render() {
