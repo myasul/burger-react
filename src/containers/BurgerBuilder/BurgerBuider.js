@@ -14,26 +14,12 @@ class BurgerBuilder extends Component {
 
     state = {
         isPurchasable: false, // change to false
-        isOrdered: false,
-        isLoading: false,
-        hasError: false
+        isOrdered: false
     }
 
-    // componentDidMount() {
-    //     axios.get('https://react-burger-project-b2062.firebaseio.com/ingredients.json')
-    //         .then(response => {
-
-    //             this.setState({
-    //                 ingredients: response.data,
-    //                 isPurchasable: this.checkIfPurchasable(response.data)
-    //             })
-    //         })
-    //         .catch(error => {
-    //             this.setState({
-    //                 hasError: true
-    //             })
-    //         });
-    // }
+    componentDidMount() {
+        this.props.onSetIngredients();
+    }
 
     checkIfPurchasable = () => {
         const ingredientCount = Object.values(this.props.ingredients).reduce(
@@ -71,7 +57,7 @@ class BurgerBuilder extends Component {
                 disabledInfo[key] = disabledInfo[key] <= 0;
             }
         );
-        if (this.state.hasError) {
+        if (this.props.error) {
             burger = <p style={burgerStyle}>Ingredients cannot be loaded.</p>
         }
 
@@ -94,11 +80,6 @@ class BurgerBuilder extends Component {
                 </Fragment>;
         }
 
-
-        if (this.state.isLoading) {
-            orderSummary = <Spinner />
-        }
-
         return (
             <React.Fragment>
                 <Modal displayModal={this.state.isOrdered} close={this.updateOrderHandler}>
@@ -113,14 +94,16 @@ class BurgerBuilder extends Component {
 const mapStateToProps = (state) => {
     return {
         ingredients: state.ingredients,
-        totalPrice: state.totalPrice
+        totalPrice: state.totalPrice,
+        error: state.error
     }
 }
 
 const mapDispatchToProps = (dispatch) => {
     return {
         onAddIngredient: (type) => dispatch(burgerBuilderActions.addIngredient(type)),
-        onRemoveIngredient: (type) => dispatch(burgerBuilderActions.removeIngredient(type))
+        onRemoveIngredient: (type) => dispatch(burgerBuilderActions.removeIngredient(type)),
+        onSetIngredients: () => dispatch(burgerBuilderActions.fetchIngredients())
     }
 }
 
