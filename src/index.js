@@ -8,9 +8,9 @@ import { devToolsEnhancer } from 'redux-devtools-extension';
 import './index.css';
 import App from './App';
 import registerServiceWorker from './registerServiceWorker';
-import reducer from './store/reducer';
+import burgerBuilderReducer from './store/reducers/burgerBuilder';
 
-const store = createStore(reducer, devToolsEnhancer());
+const store = createStore(burgerBuilderReducer, devToolsEnhancer());
 
 const app = (
     <Provider store={store}>
