@@ -41,14 +41,13 @@ class BurgerBuilder extends Component {
         });
     }
     render() {
-        console.log(this.props.ingredients);
         const burgerStyle = {
             display: 'flex',
             justifyContent: 'center',
             alignItems: 'center',
             height: '100vh'
         };
-        let orderSummary = null;
+        let orderSummary = <Spinner />;
         let burger = <Spinner />;
         const disabledInfo = { ...this.props.ingredients };
 
@@ -59,6 +58,7 @@ class BurgerBuilder extends Component {
         );
         if (this.props.error) {
             burger = <p style={burgerStyle}>Ingredients cannot be loaded.</p>
+            orderSummary = null;
         }
 
         if (this.props.ingredients) {
@@ -93,9 +93,9 @@ class BurgerBuilder extends Component {
 
 const mapStateToProps = (state) => {
     return {
-        ingredients: state.ingredients,
-        totalPrice: state.totalPrice,
-        error: state.error
+        ingredients: state.burgerBuilder.ingredients,
+        totalPrice: state.burgerBuilder.totalPrice,
+        error: state.burgerBuilder.error
     }
 }
 

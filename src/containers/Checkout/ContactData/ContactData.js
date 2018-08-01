@@ -7,6 +7,9 @@ import classes from './ContactData.css';
 import Button from '../../../components/UI/Button/Button';
 import Spinner from '../../../components/UI/Spinner/Spinner';
 import Input from '../../../components/UI/Input/Input';
+import withErrorHandler from '../../../hoc/withErrorHandler/withErrorHandler';
+import * as orderActions from '../../../store/actions/index';
+
 
 class ContactData extends Component {
     state = {
@@ -18,11 +21,10 @@ class ContactData extends Component {
             country: null,
             deliveryMethod: null
         },
-        isLoading: true,
         isFormValid: true
     }
 
-    componentDidMount() {
+    componentWillMount() {
         const loadedOrderForm = {
             name: createInputElementConfig('text', 'Your Name',
                 {
@@ -79,9 +81,6 @@ class ContactData extends Component {
 
     orderHandler = (event) => {
         event.preventDefault();
-        this.setState({
-            isLoading: true
-        });
 
         const orderData = {};
         Object.entries(this.state.orderForm).forEach(([inputName, inputValues]) => {
@@ -94,18 +93,7 @@ class ContactData extends Component {
             orderData: orderData
         };
 
-        axios.post('/orders.json', order)
-            .then(response => {
-                this.setState({
-                    isLoading: false
-                });
-                this.props.history.push('/');
-            })
-            .catch(error => {
-                this.setState({
-                    isLoading: false
-                });
-            });
+        this.props.onSubmitOrder(order); \
 
     }
 
@@ -133,7 +121,7 @@ class ContactData extends Component {
     render() {
         let form = null;
 
-        if (this.state.isLoading) {
+        if (this.props.loading) {
             form = <Spinner />
         } else {
             let inputElements = [];
@@ -199,9 +187,16 @@ function createSelectElementConfig(options) {
 
 const mapStateToProps = (state) => {
     return {
-        ingredients: state.ingredients,
-        totalPrice: state.ingredients
+        ingredients: state.burgerBuilder.ingredients,
+        totalPrice: state.burgerBuilder.ingredients,
+        loading: state.orders.loading
     }
 }
 
-export default connect(mapStateToProps)(withRouter(ContactData));
+const mapDispatchToProps = (dispatch) => {
+    return {
+        onSubmitOrder: (orderData) => dispatch(orderActions.purchaseBurgerInit(orderData))
+    }
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(withRouter(withErrorHandler(ContactData, axios)));
