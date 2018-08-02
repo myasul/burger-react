@@ -8,7 +8,7 @@ import Button from '../../../components/UI/Button/Button';
 import Spinner from '../../../components/UI/Spinner/Spinner';
 import Input from '../../../components/UI/Input/Input';
 import withErrorHandler from '../../../hoc/withErrorHandler/withErrorHandler';
-import * as orderActions from '../../../store/actions/index';
+import * as actions from '../../../store/actions/index';
 
 
 class ContactData extends Component {
@@ -56,8 +56,7 @@ class ContactData extends Component {
             )
         }
         this.setState({
-            orderForm: loadedOrderForm,
-            isLoading: false
+            orderForm: loadedOrderForm
         });
     }
 
@@ -93,7 +92,8 @@ class ContactData extends Component {
             orderData: orderData
         };
 
-        this.props.onSubmitOrder(order); \
+        this.props.onSubmitOrder(order);
+        this.props.onSetIngredients();
 
     }
 
@@ -195,7 +195,8 @@ const mapStateToProps = (state) => {
 
 const mapDispatchToProps = (dispatch) => {
     return {
-        onSubmitOrder: (orderData) => dispatch(orderActions.purchaseBurgerInit(orderData))
+        onSubmitOrder: (orderData) => dispatch(actions.purchaseBurgerInit(orderData)),
+        onSetIngredients: () => dispatch(actions.fetchIngredients())
     }
 }
 

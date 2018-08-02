@@ -18,10 +18,12 @@ class Checkout extends Component {
 
     render() {
         let checkoutSummary = <Redirect to="/" />
+        let checkoutComplete = this.props.purchased ? <Redirect to="/" /> : null
 
         if (this.props.ingredients) {
             checkoutSummary = (
-                <Fragment>
+                < Fragment >
+                    {checkoutComplete}
                     < CheckoutSummary
                         ingredients={this.props.ingredients}
                         checkoutCancelled={this.checkoutCancelledHandler}
@@ -29,7 +31,7 @@ class Checkout extends Component {
                     <Route
                         path={`${this.props.match.url}/contact-data`}
                         component={ContactData} />
-                </Fragment>
+                </Fragment >
 
             )
         }
@@ -43,7 +45,8 @@ class Checkout extends Component {
 
 const mapStateToProps = (state) => {
     return {
-        ingredients: state.burgerBuilder.ingredients
+        ingredients: state.burgerBuilder.ingredients,
+        purchased: state.orders.purchased
     }
 }
 
