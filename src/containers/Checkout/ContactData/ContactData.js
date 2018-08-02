@@ -188,7 +188,7 @@ function createSelectElementConfig(options) {
 const mapStateToProps = (state) => {
     return {
         ingredients: state.burgerBuilder.ingredients,
-        totalPrice: state.burgerBuilder.ingredients,
+        price: state.burgerBuilder.totalPrice,
         loading: state.orders.loading
     }
 }

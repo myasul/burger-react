@@ -42,8 +42,6 @@ class BurgerBuilder extends Component {
         });
     }
     render() {
-        console.log('Burger Builder Rendered!');
-        console.log(this.props.ingredients);
         const burgerStyle = {
             display: 'flex',
             justifyContent: 'center',
