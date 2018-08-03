@@ -118,6 +118,7 @@ class ContactData extends Component {
             isFormValid: isFormValid
         });
     }
+
     render() {
         let form = null;
 
