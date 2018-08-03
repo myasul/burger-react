@@ -9,7 +9,9 @@ export const authStart = () => {
 
 export const authSuccess = (authData) => {
     return {
-        type: actionTypes.AUTH_SUCCESS
+        type: actionTypes.AUTH_SUCCESS,
+        userId: authData.localId,
+        tokenId: authData.idToken
     }
 }
 
@@ -30,7 +32,7 @@ export const authInit = (email, password, isSignup) => {
         };
         const authEndpoint = isSignup ? 'signupNewUser' : 'verifyPassword';
         const API_KEY = 'AIzaSyBrgLjCLgYqDVlQhGERuwfaE5kfS-F7Fd8';
-        console.log(authEndpoint);
+
         axios.post(`https://www.googleapis.com/identitytoolkit/v3/relyingparty/${authEndpoint}?key=${API_KEY}`, credentials)
             .then(response => {
                 console.log(response);

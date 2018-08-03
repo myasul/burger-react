@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { Component, Fragment } from 'react';
 import { connect } from 'react-redux';
 
 import Button from '../../components/UI/Button/Button';
@@ -15,11 +15,10 @@ class Auth extends Component {
             password: null,
         },
         isFormValid: true,
-        isSignup: true,
-        isLoading: true
+        isSignup: true
     }
 
-    componentDidMount() {
+    componentWillMount() {
 
         const loadedOrderForm = {
             email: createInputElementConfig('email', 'Your E-Mail',
@@ -103,7 +102,7 @@ class Auth extends Component {
 
     render() {
         let loginForm = <Spinner />
-        if (!this.state.isLoading) {
+        if (!this.props.loading) {
             let inputElements = [];
             Object.entries(this.state.loginForm).forEach(([key, value]) => {
                 inputElements.push(
@@ -117,19 +116,21 @@ class Auth extends Component {
                 )
             });
             loginForm = (
-                <form onSubmit={this.submitCredentialsHandler}>
-                    {inputElements}
-                    <Button btnType='Success'>SUBMIT</Button>
-                </form >
+                <Fragment>
+                    <form onSubmit={this.submitCredentialsHandler}>
+                        {inputElements}
+                        <Button btnType='Success'>SUBMIT</Button>
+                    </form >
+                    <Button
+                        btnType='Danger'
+                        action={this.switchAuthModeHandler}>SWITCH TO {this.state.isSignup ? 'SIGN IN ' : 'SIGN UP'}</Button>
+                </Fragment>
             );
         }
 
         return (
             <div className={classes.Auth}>
                 {loginForm}
-                <Button
-                    btnType='Danger'
-                    action={this.switchAuthModeHandler}>SWITCH TO {this.state.isSignup ? 'SIGN IN ' : 'SIGN UP'}</Button>
             </div>
 
         );
@@ -150,10 +151,16 @@ const createInputElementConfig = (type, placeholder, validationRules) => {
 }
 
 
+const mapStateToProps = (state) => {
+    return {
+        loading: state.auth.loading
+    }
+}
+
 const mapDispatchToProps = (dispatch) => {
     return {
         onAuth: (email, password, isSignup) => dispatch(actions.authInit(email, password, isSignup))
     }
 }
 
-export default connect(null, mapDispatchToProps)(Auth);
+export default connect(mapStateToProps, mapDispatchToProps)(Auth);
