@@ -9,3 +9,7 @@ export {
     checkoutInit,
     fetchOrdersInit
 } from './orders';
+
+export {
+    authInit
+} from './auth';

@@ -1,8 +1,10 @@
 import React, { Component, Fragment } from 'react';
+import { connect } from 'react-redux';
 
 import Button from '../../components/UI/Button/Button';
 import Input from '../../components/UI/Input/Input';
 import Spinner from '../../components/UI/Spinner/Spinner';
+import * as actions from '../../store/actions/index';
 import classes from './Auth.css';
 
 class Auth extends Component {
@@ -59,6 +61,11 @@ class Auth extends Component {
         });
     }
 
+    submitCredentialsHandler = (event) => {
+        event.preventDefault();
+        this.props.onAuth(this.state.loginForm.email.elementValue, this.state.loginForm.password.elementValue);
+    }
+
     validationHandler = (value, rules) => {
         let isValid = true;
 
@@ -83,7 +90,6 @@ class Auth extends Component {
     }
 
     render() {
-        console.log('Rendering');
         let loginForm = <Spinner />
         if (!this.state.isLoading) {
             let inputElements = [];
@@ -107,7 +113,7 @@ class Auth extends Component {
         }
 
         return (
-            <form className={classes.Auth} >
+            <form className={classes.Auth} onSubmit={this.submitCredentialsHandler}>
                 {loginForm}
             </form>
         );
@@ -127,4 +133,11 @@ const createInputElementConfig = (type, placeholder, validationRules) => {
     }
 }
 
-export default Auth;
+
+const mapDispatchToProps = (dispatch) => {
+    return {
+        onAuth: (email, password) => dispatch(actions.authInit(email, password))
+    }
+}
+
+export default connect(null, mapDispatchToProps)(Auth);
