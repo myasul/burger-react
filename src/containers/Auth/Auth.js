@@ -101,31 +101,41 @@ class Auth extends Component {
     }
 
     render() {
-        let loginForm = <Spinner />
-        if (!this.props.loading) {
-            let inputElements = [];
-            Object.entries(this.state.loginForm).forEach(([key, value]) => {
-                inputElements.push(
-                    <Input
-                        key={key}
-                        elementType={value.elementType}
-                        elementConfig={value.elementConfig}
-                        elementValue={value.elementValue}
-                        changed={(event) => this.inputChangeHandler(event, key)}
-                        invalid={!value.isValid} />
-                )
-            });
-            loginForm = (
-                <Fragment>
-                    <form onSubmit={this.submitCredentialsHandler}>
-                        {inputElements}
-                        <Button btnType='Success'>SUBMIT</Button>
-                    </form >
-                    <Button
-                        btnType='Danger'
-                        action={this.switchAuthModeHandler}>SWITCH TO {this.state.isSignup ? 'SIGN IN ' : 'SIGN UP'}</Button>
-                </Fragment>
-            );
+        let inputElements = [];
+        Object.entries(this.state.loginForm).forEach(([key, value]) => {
+            inputElements.push(
+                <Input
+                    key={key}
+                    elementType={value.elementType}
+                    elementConfig={value.elementConfig}
+                    elementValue={value.elementValue}
+                    changed={(event) => this.inputChangeHandler(event, key)}
+                    invalid={!value.isValid} />
+            )
+        });
+
+        let errorMessage = null;
+        if (this.props.error) {
+            const re = /_/gi;
+            const error = this.props.error.replace(re, ' ');
+            errorMessage = <p className={classes.ErrorMessage}>{error}</p>;
+        }
+
+        let loginForm = (
+            <Fragment>
+                {errorMessage}
+                <form onSubmit={this.submitCredentialsHandler}>
+                    {inputElements}
+                    <Button btnType='Success'>SUBMIT</Button>
+                </form >
+                <Button
+                    btnType='Danger'
+                    action={this.switchAuthModeHandler}>SWITCH TO {this.state.isSignup ? 'SIGN IN ' : 'SIGN UP'}</Button>
+            </Fragment>
+        );
+
+        if (this.props.loading) {
+            loginForm = <Spinner />
         }
 
         return (
@@ -153,7 +163,8 @@ const createInputElementConfig = (type, placeholder, validationRules) => {
 
 const mapStateToProps = (state) => {
     return {
-        loading: state.auth.loading
+        loading: state.auth.loading,
+        error: state.auth.error
     }
 }
 

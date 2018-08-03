@@ -35,12 +35,10 @@ export const authInit = (email, password, isSignup) => {
 
         axios.post(`https://www.googleapis.com/identitytoolkit/v3/relyingparty/${authEndpoint}?key=${API_KEY}`, credentials)
             .then(response => {
-                console.log(response);
                 dispatch(authSuccess(response.data))
             })
             .catch(error => {
-                console.log(error);
-                dispatch(authFail(error));
+                dispatch(authFail(error.response.data.error.message));
             });
     }
 }
