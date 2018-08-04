@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Route, Switch, withRouter } from 'react-router-dom';
+import { Route, Switch, withRouter, Redirect } from 'react-router-dom';
 import { connect } from 'react-redux';
 
 import Layout from './containers/Layout/Layout';
@@ -17,19 +17,40 @@ class App extends Component {
         this.props.onCheckLoginValidity();
     }
     render() {
+        let routes = null;
+        if (this.props.isAuthenticated) {
+            routes = (
+                <Switch>
+                    <Route path='/checkout' component={Checkout} />
+                    <Route path='/orders' component={Orders} />
+                    <Route path='/logout' component={Logout} />
+                    <Route path='/' exact component={BurgerBuilder} />
+                    <Redirect to='/' />
+                </Switch>
+            );
+        } else {
+            routes = (
+                <Switch>
+                    <Route path='/auth' component={Auth} />
+                    <Route path='/' exact component={BurgerBuilder} />
+                    <Redirect to='/' />
+                </Switch>
+            );
+        }
+
         return (
             <div className={classes.App}>
                 <Layout>
-                    <Switch>
-                        <Route path='/auth' component={Auth} />
-                        <Route path='/checkout' component={Checkout} />
-                        <Route path='/orders' component={Orders} />
-                        <Route path='/logout' component={Logout} />
-                        <Route path='/' component={BurgerBuilder} />
-                    </Switch>
+                    {routes}
                 </Layout>
             </div>
         );
+    }
+}
+
+const mapStateToProps = (state) => {
+    return {
+        isAuthenticated: state.auth.tokenId !== null
     }
 }
 
@@ -39,4 +60,4 @@ const mapDispatchToProps = (dispatch) => {
     }
 }
 
-export default withRouter(connect(null, mapDispatchToProps)(App));
+export default withRouter(connect(mapStateToProps, mapDispatchToProps)(App));
