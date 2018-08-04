@@ -12,5 +12,6 @@ export {
 
 export {
     authInit,
-    logout
+    logout,
+    setAuthRedirectPath
 } from './auth';

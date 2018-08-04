@@ -20,6 +20,9 @@ class Auth extends Component {
     }
 
     componentWillMount() {
+        if (!this.props.building && this.redirectPath !== '/') {
+            this.props.onResetRedirectPath();
+        }
 
         const loadedOrderForm = {
             email: createInputElementConfig('email', 'Your E-Mail',
@@ -122,7 +125,7 @@ class Auth extends Component {
             errorMessage = <p className={classes.ErrorMessage}>{error}</p>;
         }
 
-        let redirectToBurgerBuilder = this.props.isAuthenticated ? <Redirect to="/" /> : null;
+        let redirectToBurgerBuilder = this.props.isAuthenticated ? <Redirect to={this.props.redirectPath} /> : null;
 
         let loginForm = (
             <Fragment>
@@ -169,13 +172,16 @@ const mapStateToProps = (state) => {
     return {
         loading: state.auth.loading,
         error: state.auth.error,
-        isAuthenticated: state.auth.tokenId !== null
+        isAuthenticated: state.auth.tokenId !== null,
+        redirectPath: state.auth.redirectPath,
+        building: state.burgerBuilder.building
     }
 }
 
 const mapDispatchToProps = (dispatch) => {
     return {
-        onAuth: (email, password, isSignup) => dispatch(actions.authInit(email, password, isSignup))
+        onAuth: (email, password, isSignup) => dispatch(actions.authInit(email, password, isSignup)),
+        onResetRedirectPath: () => dispatch(actions.setAuthRedirectPath('/'))
     }
 }
 
