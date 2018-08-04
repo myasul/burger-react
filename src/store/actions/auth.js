@@ -30,6 +30,10 @@ export const setAuthRedirectPath = (path) => {
 }
 
 export const logout = () => {
+    localStorage.removeItem('expirationDate');
+    localStorage.removeItem('tokenId');
+    localStorage.removeItem('userId');
+
     return {
         type: actionTypes.AUTH_LOGOUT
     };
@@ -54,6 +58,12 @@ export const authInit = (email, password, isSignup) => {
 
         axios.post(`https://www.googleapis.com/identitytoolkit/v3/relyingparty/${authEndpoint}?key=${API_KEY}`, credentials)
             .then(response => {
+                const expirationDate = new Date(new Date().getTime() + (response.data.expiresIn * 1000));
+
+                localStorage.setItem('expirationDate', expirationDate);
+                localStorage.setItem('tokenId', response.data.idToken);
+                localStorage.setItem('userId', response.data.localId);
+
                 dispatch(authSuccess(response.data));
                 dispatch(checkAuthTimeout(response.data.expiresIn));
             })
@@ -62,3 +72,24 @@ export const authInit = (email, password, isSignup) => {
             });
     };
 };
+
+export const checkLoginValidity = () => {
+    return dispatch => {
+        const tokenId = localStorage.getItem('tokenId');
+        if (!tokenId) {
+            dispatch(logout());
+        } else {
+            const expirationDate = new Date(localStorage.getItem('expirationDate'));
+            if (expirationDate >= new Date()) {
+                const userId = localStorage.getItem('userId');
+                const updatedExpirationDate = new Date(
+                    new Date().getTime() + (expirationDate.getTime() - new Date().getTime())
+                );
+                localStorage.setItem('expirationDate', updatedExpirationDate);
+                dispatch(authSuccess({ idToken: tokenId, localId: userId }));
+            } else {
+                dispatch(logout());
+            }
+        }
+    }
+}

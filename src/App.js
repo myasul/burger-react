@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
-import { Route, Switch } from 'react-router-dom';
+import { Route, Switch, withRouter } from 'react-router-dom';
+import { connect } from 'react-redux';
 
 import Layout from './containers/Layout/Layout';
 import BurgerBuilder from './containers/BurgerBuilder/BurgerBuilder';
@@ -7,9 +8,14 @@ import Checkout from './containers/Checkout/Checkout';
 import Orders from './containers/Orders/Orders';
 import Auth from './containers/Auth/Auth';
 import Logout from './containers/Auth/Logout/Logout';
+import * as actions from './store/actions/index';
 import classes from './App.css';
 
 class App extends Component {
+
+    componentDidMount() {
+        this.props.onCheckLoginValidity();
+    }
     render() {
         return (
             <div className={classes.App}>
@@ -27,4 +33,10 @@ class App extends Component {
     }
 }
 
-export default App;
+const mapDispatchToProps = (dispatch) => {
+    return {
+        onCheckLoginValidity: () => dispatch(actions.checkLoginValidity())
+    }
+}
+
+export default withRouter(connect(null, mapDispatchToProps)(App));
