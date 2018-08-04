@@ -4,3 +4,5 @@ export const updateObject = (oldState, updatedProperties) => {
         ...updatedProperties
     }
 }
+
+

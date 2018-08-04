@@ -7,6 +7,7 @@ import Input from '../../components/UI/Input/Input';
 import Spinner from '../../components/UI/Spinner/Spinner';
 import * as actions from '../../store/actions/index';
 import classes from './Auth.css';
+import { updateObject } from '../../shared/utility';
 
 class Auth extends Component {
 
@@ -48,11 +49,14 @@ class Auth extends Component {
     }
 
     inputChangeHandler = (event, inputIdentifier) => {
-        const updatedOrderForm = JSON.parse(JSON.stringify(this.state.loginForm));
-
-        updatedOrderForm[inputIdentifier].elementValue = event.target.value;
-        updatedOrderForm[inputIdentifier].isValid = this.validationHandler(
-            event.target.value, updatedOrderForm[inputIdentifier].validation);
+        const updatedElement = updateObject(this.state.loginForm[inputIdentifier], {
+            elementValue: event.target.value,
+            isValid: this.validationHandler(
+                event.target.value, this.state.loginForm[inputIdentifier].validation)
+        });
+        const updatedOrderForm = updateObject(this.state.loginForm, {
+            [inputIdentifier]: updatedElement
+        });
 
         let isFormValid = true;
         Object.entries(updatedOrderForm).forEach(([key, inputForms]) => {

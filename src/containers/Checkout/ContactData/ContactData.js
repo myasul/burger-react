@@ -7,6 +7,7 @@ import Button from '../../../components/UI/Button/Button';
 import Spinner from '../../../components/UI/Spinner/Spinner';
 import Input from '../../../components/UI/Input/Input';
 import * as actions from '../../../store/actions/index';
+import { updateObject } from '../../../shared/utility';
 
 
 class ContactData extends Component {
@@ -97,11 +98,14 @@ class ContactData extends Component {
     }
 
     inputChangeHandler = (event, inputIdentifier) => {
-        const updatedOrderForm = JSON.parse(JSON.stringify(this.state.orderForm));
-
-        updatedOrderForm[inputIdentifier].elementValue = event.target.value;
-        updatedOrderForm[inputIdentifier].isValid = this.validationHandler(
-            event.target.value, updatedOrderForm[inputIdentifier].validation);
+        const updatedElement = updateObject(this.state.orderForm[inputIdentifier], {
+            elementValue: event.target.value,
+            isValid: this.validationHandler(
+                event.target.value, this.state.orderForm[inputIdentifier].validation)
+        });
+        const updatedOrderForm = updateObject(this.state.orderForm, {
+            [inputIdentifier]: updatedElement
+        });
 
         let isFormValid = true;
         Object.entries(updatedOrderForm).forEach(([key, inputForms]) => {
