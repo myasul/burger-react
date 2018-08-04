@@ -21,7 +21,11 @@ class Auth extends Component {
 
     componentWillMount() {
         if (!this.props.building && this.redirectPath !== '/') {
-            this.props.onResetRedirectPath();
+            this.props.onSetRedirectPath('/');
+        }
+
+        if (this.props.building) {
+            this.props.onSetRedirectPath('/checkout');
         }
 
         const loadedOrderForm = {
@@ -181,7 +185,7 @@ const mapStateToProps = (state) => {
 const mapDispatchToProps = (dispatch) => {
     return {
         onAuth: (email, password, isSignup) => dispatch(actions.authInit(email, password, isSignup)),
-        onResetRedirectPath: () => dispatch(actions.setAuthRedirectPath('/'))
+        onSetRedirectPath: (path) => dispatch(actions.setAuthRedirectPath(path))
     }
 }
 

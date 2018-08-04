@@ -17,13 +17,13 @@ const sideDrawer = (props) => {
     return (
         <Fragment>
             {props.isOpen ? <Backdrop close={props.close} /> : null}
-            <div className={sideDrawerClasses.join(' ')}>
+            <div className={sideDrawerClasses.join(' ')} onClick={props.close}>
                 <div className={classes.Logo}>
                     <Logo />
                 </div>
 
                 <nav>
-                    <NavigationItems />
+                    <NavigationItems isAuthenticated={props.isAuthenticated} />
                 </nav>
             </div>
         </Fragment>
