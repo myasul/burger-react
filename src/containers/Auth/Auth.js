@@ -7,7 +7,7 @@ import Input from '../../components/UI/Input/Input';
 import Spinner from '../../components/UI/Spinner/Spinner';
 import * as actions from '../../store/actions/index';
 import classes from './Auth.css';
-import { updateObject } from '../../shared/utility';
+import { updateObject, validateRules } from '../../shared/utility';
 
 class Auth extends Component {
 
@@ -49,13 +49,12 @@ class Auth extends Component {
     }
 
     inputChangeHandler = (event, inputIdentifier) => {
-        const updatedElement = updateObject(this.state.loginForm[inputIdentifier], {
-            elementValue: event.target.value,
-            isValid: this.validationHandler(
-                event.target.value, this.state.loginForm[inputIdentifier].validation)
-        });
         const updatedOrderForm = updateObject(this.state.loginForm, {
-            [inputIdentifier]: updatedElement
+            [inputIdentifier]: updateObject(this.state.loginForm[inputIdentifier], {
+                elementValue: event.target.value,
+                isValid: validateRules(
+                    event.target.value, this.state.loginForm[inputIdentifier].validation)
+            })
         });
 
         let isFormValid = true;
@@ -87,29 +86,6 @@ class Auth extends Component {
                 isSignup: !prevState.isSignup
             }
         });
-    }
-
-    validationHandler = (value, rules) => {
-        let isValid = true;
-
-        if (rules.required) {
-            isValid = value.trim() !== '' && isValid;
-        }
-
-        if (rules.minLength) {
-            isValid = rules.minLength <= value.length && isValid;
-        }
-
-        if (rules.maxLength) {
-            isValid = rules.maxLength >= value.length && isValid;
-        }
-
-        if (rules.validateEmail) {
-            var re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
-            isValid = re.test(value) && isValid;
-        }
-
-        return isValid;
     }
 
     render() {

@@ -44,8 +44,9 @@ const reducer = (state = initialState, action) => {
         case (actionTypes.AUTH_SUCCESS): return authSuccess(state, action);
         case (actionTypes.AUTH_LOGOUT): return authLogout(state, action);
         case (actionTypes.SET_AUTH_REDIRECT_PATH): return setRedirectPath(state, action);
-        default: return state;
-    };
+        default:
+            return state;
+    }
 };
 
 export default reducer;

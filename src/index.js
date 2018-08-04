@@ -19,7 +19,9 @@ const rootReducer = combineReducers({
     auth: authReducer
 })
 
-const store = createStore(rootReducer, composeWithDevTools(
+const composeEnhancers = process.env.NODE_ENV === 'development' ? composeWithDevTools : null;
+
+const store = createStore(rootReducer, composeEnhancers(
     applyMiddleware(thunk))
 );
 

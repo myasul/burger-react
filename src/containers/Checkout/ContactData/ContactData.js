@@ -7,7 +7,7 @@ import Button from '../../../components/UI/Button/Button';
 import Spinner from '../../../components/UI/Spinner/Spinner';
 import Input from '../../../components/UI/Input/Input';
 import * as actions from '../../../store/actions/index';
-import { updateObject } from '../../../shared/utility';
+import { updateObject, validateRules } from '../../../shared/utility';
 
 
 class ContactData extends Component {
@@ -31,7 +31,8 @@ class ContactData extends Component {
                 }),
             email: createInputElementConfig('email', 'Your E-Mail',
                 {
-                    required: true
+                    required: true,
+                    validateEmail: true
                 }),
             street: createInputElementConfig('text', 'Street',
                 {
@@ -59,24 +60,6 @@ class ContactData extends Component {
         });
     }
 
-    validationHandler = (value, rules) => {
-        let isValid = true;
-
-        if (rules.required) {
-            isValid = value.trim() !== '' && isValid;
-        }
-
-        if (rules.minLength) {
-            isValid = rules.minLength <= value.length && isValid;
-        }
-
-        if (rules.maxLength) {
-            isValid = rules.maxLength >= value.length && isValid;
-        }
-
-        return isValid;
-    }
-
     orderHandler = (event) => {
         event.preventDefault();
 
@@ -98,13 +81,12 @@ class ContactData extends Component {
     }
 
     inputChangeHandler = (event, inputIdentifier) => {
-        const updatedElement = updateObject(this.state.orderForm[inputIdentifier], {
-            elementValue: event.target.value,
-            isValid: this.validationHandler(
-                event.target.value, this.state.orderForm[inputIdentifier].validation)
-        });
         const updatedOrderForm = updateObject(this.state.orderForm, {
-            [inputIdentifier]: updatedElement
+            [inputIdentifier]: updateObject(this.state.orderForm[inputIdentifier], {
+                elementValue: event.target.value,
+                isValid: validateRules(
+                    event.target.value, this.state.orderForm[inputIdentifier].validation)
+            })
         });
 
         let isFormValid = true;
