@@ -6,10 +6,12 @@
     border: 1px solid #eee;
     padding: 10px;
     box-sizing: border-box;
+    z-index: 90;
 }
 
 .Input {
     display: block;
+    z-index: 90;
 }
 
 @media (min-width:600px) {

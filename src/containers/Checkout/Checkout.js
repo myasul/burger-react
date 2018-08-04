@@ -4,6 +4,8 @@ import { connect } from 'react-redux';
 
 import CheckoutSummary from '../../components/Order/CheckoutSummary/CheckoutSummary';
 import ContactData from '../Checkout/ContactData/ContactData';
+import axios from '../../axios-orders';
+import withErrorHandler from '../../hoc/withErrorHandler/withErrorHandler';
 
 class Checkout extends Component {
     checkoutCancelledHandler = () => {
@@ -51,4 +53,4 @@ const mapStateToProps = (state) => {
 }
 
 
-export default connect(mapStateToProps)(Checkout);
+export default connect(mapStateToProps)(withErrorHandler(Checkout, axios));

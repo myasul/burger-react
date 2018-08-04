@@ -92,7 +92,7 @@ class ContactData extends Component {
             orderData: orderData
         };
 
-        this.props.onSubmitOrder(order);
+        this.props.onSubmitOrder(order, this.props.tokenId);
         this.props.onSetIngredients();
 
     }
@@ -190,15 +190,16 @@ const mapStateToProps = (state) => {
     return {
         ingredients: state.burgerBuilder.ingredients,
         price: state.burgerBuilder.totalPrice,
-        loading: state.orders.loading
+        loading: state.orders.loading,
+        tokenId: state.auth.tokenId
     }
 }
 
 const mapDispatchToProps = (dispatch) => {
     return {
-        onSubmitOrder: (orderData) => dispatch(actions.purchaseBurgerInit(orderData)),
+        onSubmitOrder: (orderData, tokenId) => dispatch(actions.purchaseBurgerInit(orderData, tokenId)),
         onSetIngredients: () => dispatch(actions.fetchIngredients())
     }
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(withRouter(withErrorHandler(ContactData, axios)));
+export default connect(mapStateToProps, mapDispatchToProps)(withRouter(ContactData));
