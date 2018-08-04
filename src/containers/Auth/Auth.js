@@ -1,4 +1,5 @@
 import React, { Component, Fragment } from 'react';
+import { Redirect } from 'react-router-dom';
 import { connect } from 'react-redux';
 
 import Button from '../../components/UI/Button/Button';
@@ -121,8 +122,11 @@ class Auth extends Component {
             errorMessage = <p className={classes.ErrorMessage}>{error}</p>;
         }
 
+        let redirectToBurgerBuilder = this.props.isAuthenticated ? <Redirect to="/" /> : null;
+
         let loginForm = (
             <Fragment>
+                {redirectToBurgerBuilder}
                 {errorMessage}
                 <form onSubmit={this.submitCredentialsHandler}>
                     {inputElements}
@@ -164,7 +168,8 @@ const createInputElementConfig = (type, placeholder, validationRules) => {
 const mapStateToProps = (state) => {
     return {
         loading: state.auth.loading,
-        error: state.auth.error
+        error: state.auth.error,
+        isAuthenticated: state.auth.tokenId !== null
     }
 }
 
